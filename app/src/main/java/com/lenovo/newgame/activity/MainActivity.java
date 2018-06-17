@@ -1,4 +1,4 @@
-package com.example.lenovo.newgame.activity;
+package com.lenovo.newgame.activity;
 
 
 import android.content.Context;
@@ -19,8 +19,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.lenovo.newgame.R;
-import com.example.lenovo.newgame.manger.PrefManager;
+import com.lenovo.newgame.R;
+import com.lenovo.newgame.manger.PrefManager;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,7 +1,9 @@
-package com.example.lenovo.newgame.activity;
+package com.lenovo.newgame.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -13,13 +15,16 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.lenovo.newgame.R;
+import com.lenovo.newgame.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class basic extends AppCompatActivity {
+    public SharedPreferences sharedpreferences;
+    public static final int  Flag_prefrences = 0;
+    public static final String Flag_Key= "MyPref";
 
     @BindView(R.id.level)
     TextView textViewLevel;
@@ -61,13 +66,15 @@ public class basic extends AppCompatActivity {
     private int result_in_game = 0;
     //    private String Operator_array[]=new String[9];
 //    private int digit_array[]=new int[9];
-    private int flag = 1;
+    public int flag = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_easy_level);
         ButterKnife.bind(this);
+         sharedpreferences = getSharedPreferences(Flag_Key, Context.MODE_PRIVATE);
+
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/digital.ttf");
         textViewAnswer.setTypeface(typeface);
         startGame(level_number, moves_in_level, goal_in_level, result_in_game);
@@ -86,6 +93,8 @@ public class basic extends AppCompatActivity {
         textViewAnswer.setText(r);
         String g = String.valueOf(goal_in_level);
         textViewGoal.setText("Goal :" + g);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+
         if (flag == 1) {
             button2.setText("X4");
             button5.setText("+1");

@@ -1,37 +1,45 @@
-package com.example.lenovo.newgame.activity;
+package com.lenovo.newgame.activity;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import android.support.v7.widget.Toolbar;
 
-import com.example.lenovo.newgame.R;
+import com.lenovo.newgame.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Main2Activity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private static final String LOCALE_KEY = "localekey";
+    private static final String HINDI_LOCALE = "hi";
+    private static final String ENGLISH_LOCALE = "en_US";
+    private static final String LOCALE_PREF_KEY = "localePref";
+
+    private Locale locale;
 
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+ //       Fetching sharedpreferences to get Locale stored in them
+        SharedPreferences sp = getSharedPreferences(LOCALE_PREF_KEY, MODE_PRIVATE);
+        String localeString = sp.getString(LOCALE_KEY, ENGLISH_LOCALE);
+
 
         /*Button btn=(Button)findViewById(R.id.click);
 

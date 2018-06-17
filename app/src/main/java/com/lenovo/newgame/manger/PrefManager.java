@@ -1,4 +1,4 @@
-package com.example.lenovo.newgame.manger;
+package com.lenovo.newgame.manger;
 
 import android.content.Context;
 import android.content.SharedPreferences;

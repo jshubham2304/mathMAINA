@@ -8,16 +8,12 @@
     android:id="@+id/sc"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-
-
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            //addition
             <LinearLayout
                 android:id="@+id/add_layout"
                 android:padding="@dimen/padding"
