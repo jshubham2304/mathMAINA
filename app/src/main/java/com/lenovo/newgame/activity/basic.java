@@ -14,7 +14,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.lenovo.newgame.R;
 
 import butterknife.BindView;
@@ -22,9 +25,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class basic extends AppCompatActivity {
-    public SharedPreferences sharedpreferences;
-    public static final int  Flag_prefrences = 0;
-    public static final String Flag_Key= "MyPref";
 
     @BindView(R.id.level)
     TextView textViewLevel;
@@ -64,23 +64,74 @@ public class basic extends AppCompatActivity {
     private int moves_in_level = 3;
     private int goal_in_level = 12;
     private int result_in_game = 0;
-    //    private String Operator_array[]=new String[9];
-//    private int digit_array[]=new int[9];
-    public int flag = 2;
+    private int flag = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_easy_level);
         ButterKnife.bind(this);
-         sharedpreferences = getSharedPreferences(Flag_Key, Context.MODE_PRIVATE);
-
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/digital.ttf");
         textViewAnswer.setTypeface(typeface);
+        final SharedPreferences prefs = this.getSharedPreferences(
+                "level", Context.MODE_PRIVATE);
+        flag = prefs.getInt("basiclevel",flag);
+        if (flag == 11)
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(basic.this);
+            dialog.setTitle("CONGRATULATIONS");
+            dialog.setMessage("YOU Have Completed The Basic Math Successfully \nWould You Like To Start Again From Level 0");
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                            "level", Context.MODE_PRIVATE);
+                    prefs.edit().putInt("basiclevel",1).apply();
+                    recreate();
+                }
+            }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(basic.this,HomeActivity.class);
+                    startActivity(i);
+                }
+            }).show();
+        }
+        else
+        {
+
+            level_number = prefs.getInt("levelnumber",level_number);
+            moves_in_level = prefs.getInt("moveslevel",moves_in_level);
+            goal_in_level =  prefs.getInt("goallevel",goal_in_level);
+            result_in_game = prefs.getInt("resultlevel",result_in_game);
+
+            startGame(level_number, moves_in_level, goal_in_level, result_in_game);
+        }
         startGame(level_number, moves_in_level, goal_in_level, result_in_game);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(basic.this,HomeActivity.class);
+        startActivity(i);
     }
 
     public void startGame(int level_number, int moves_in_level, int goal_in_level, int result_in_game) {
+
+        SharedPreferences prefs = this.getSharedPreferences(
+                "level", Context.MODE_PRIVATE);
+        prefs.edit().putInt("basiclevel",flag).apply();
+        prefs.edit().putInt("levelnumber",level_number).apply();
+        prefs.edit().putInt("moveslevel",moves_in_level).apply();
+        prefs.edit().putInt("goallevel",goal_in_level).apply();
+        prefs.edit().putInt("resultlevel",result_in_game).apply();
+
+
+
         this.level_number = level_number;
         this.moves_in_level = moves_in_level;
         this.goal_in_level = goal_in_level;
@@ -93,8 +144,6 @@ public class basic extends AppCompatActivity {
         textViewAnswer.setText(r);
         String g = String.valueOf(goal_in_level);
         textViewGoal.setText("Goal :" + g);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-
         if (flag == 1) {
             button2.setText("X4");
             button5.setText("+1");
@@ -490,11 +539,15 @@ public class basic extends AppCompatActivity {
                         startGame(10, moves_in_level, 100, result_in_game);
                     } else if ((moves_in_level == 0) && (result_in_game == goal_in_level)) {
                         textViewAnswer.setText("You WIN");
+                        flag = 11;
+                        SharedPreferences prefs = this.getSharedPreferences(
+                                "level", Context.MODE_PRIVATE);
+                        prefs.edit().putInt("basiclevel",flag).apply();
                         AlertDialog.Builder dialog = new AlertDialog.Builder(basic.this);
                         dialog.setTitle("CONGRATULATIONS");
                         dialog.setCancelable(false);
                         dialog.setMessage("YOU Have Completed The Basic Level Successfully");
-                        dialog.setPositiveButton("Go to Intermediate Level", new DialogInterface.OnClickListener() {
+                        dialog.setPositiveButton("Go to Object Maths", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(basic.this, HomeActivity.class);
@@ -849,19 +902,21 @@ public class basic extends AppCompatActivity {
                         startGame(10, moves_in_level, 100, result_in_game);
                     } else if ((moves_in_level == 0) && (result_in_game == goal_in_level)) {
                         textViewAnswer.setText("You WIN");
+                        flag = 11;
+                        SharedPreferences prefs = this.getSharedPreferences(
+                                "level", Context.MODE_PRIVATE);
+                        prefs.edit().putInt("basiclevel",flag).apply();
                         AlertDialog.Builder dialog = new AlertDialog.Builder(basic.this);
                         dialog.setTitle("CONGRATULATIONS");
                         dialog.setCancelable(false);
-                        dialog.setMessage("YOU Have Completed The Basic Level Successfully");
-                        dialog.setPositiveButton("Go to Intermediate Level", new DialogInterface.OnClickListener() {
+                        dialog.setMessage("YOU Have Completed The Basic Maths Successfully");
+                        dialog.setPositiveButton("Go to Object Maths", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(basic.this, HomeActivity.class);
                                 startActivity(intent);
                             }
                         }).show();
-
-
                     }
                 }
                 break;
@@ -1209,11 +1264,15 @@ public class basic extends AppCompatActivity {
                         startGame(10, moves_in_level, 100, result_in_game);
                     } else if ((moves_in_level == 0) && (result_in_game == goal_in_level)) {
                         textViewAnswer.setText("You WIN");
+                        flag = 11;
+                        SharedPreferences prefs = this.getSharedPreferences(
+                                "level", Context.MODE_PRIVATE);
+                        prefs.edit().putInt("basiclevel",flag).apply();
                         AlertDialog.Builder dialog = new AlertDialog.Builder(basic.this);
                         dialog.setCancelable(false);
                         dialog.setTitle("CONGRATULATIONS");
-                        dialog.setMessage("YOU Have Completed The Basic Level Successfully");
-                        dialog.setPositiveButton("Go to Intermediate Level", new DialogInterface.OnClickListener() {
+                        dialog.setMessage("YOU Have Completed The Basic Maths Successfully");
+                        dialog.setPositiveButton("Go to Home", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(basic.this, HomeActivity.class);

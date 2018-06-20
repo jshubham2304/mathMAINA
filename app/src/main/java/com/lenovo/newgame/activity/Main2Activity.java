@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.lenovo.newgame.R;
+import com.lenovo.newgame.fourFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,7 @@ public class Main2Activity extends AppCompatActivity {
         adapter.addFragment(new TwoFragment(), "Basic Maths");
         adapter.addFragment(new ThreeFragment(), "Area ");
         adapter.addFragment(new OneFragment(), "Trigonometry");
+        adapter.addFragment( new fourFragment(),"Tables" );
 
         viewPager.setAdapter(adapter);
     }

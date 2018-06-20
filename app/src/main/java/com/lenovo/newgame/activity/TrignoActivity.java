@@ -1,7 +1,9 @@
 package com.lenovo.newgame.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -37,7 +39,6 @@ public class TrignoActivity extends AppCompatActivity {
     public String bl1,bl2,bl3="";
     public int size=65;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,10 @@ public class TrignoActivity extends AppCompatActivity {
         Level=(TextView)findViewById(R.id.level);
         final MediaPlayer mp = MediaPlayer.create(this,R.raw.bclick);
 
+        SharedPreferences prefs = this.getSharedPreferences(
+                "level", Context.MODE_PRIVATE);
+
+        i = prefs.getInt("trignolevel",i);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/digital.ttf");
         Result.setTypeface(typeface);
         b1.setOnClickListener(new View.OnClickListener() {
@@ -102,20 +107,45 @@ public class TrignoActivity extends AppCompatActivity {
     }
 
     private void fun() {
-        bl1="";
-        bl2="";
-        bl3="";
-        Result.setText("0");
-        black1.setText(Black1.get(i));
-        black2.setText(Black2.get(i));
-        black3.setText(Black3.get(i));
-        Goal.setText("Goal :" + Goals.get(i));
-        Level.setText("LEVEL " + String.valueOf(i + 1));
-        move.setText("Moves : " + Move.get(i));
-        turnmove = Integer.parseInt(Move.get(i).toString());
+        if (i <= 9)
+        {
+            bl1 = "";
+            bl2 = "";
+            bl3 = "";
+            Result.setText("0");
+            black1.setText(Black1.get(i));
+            black2.setText(Black2.get(i));
+            black3.setText(Black3.get(i));
+            Goal.setText("Goal :" + Goals.get(i));
+            Level.setText("LEVEL " + String.valueOf(i + 1));
+            move.setText("Moves : " + Move.get(i));
+            turnmove = Integer.parseInt(Move.get(i).toString());
+        }
+        else
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(TrignoActivity.this);
+            dialog.setTitle("CONGRATULATIONS");
+            dialog.setMessage("YOU Have Completed all the Levels of Trignometry Maths \nWould You Like to Start Again From Level 0");
 
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
+                    SharedPreferences p = getApplicationContext().getSharedPreferences("level",MODE_PRIVATE);
+                    p.edit().putInt("trignolevel",0).apply();
+                    recreate();
 
+                }
+            });
+            dialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(TrignoActivity.this,HomeActivity.class);
+                    startActivity(i);
+                }
+            }).show();
+        }
 
     }
 
@@ -129,15 +159,18 @@ public class TrignoActivity extends AppCompatActivity {
             move.setText("Moves : "+Integer.toString(turnmove));
             Result.setText(Result.getText()+"+"+ResultData);
             size-=20;
-
-
-
         }
         else
         {
             check();
 
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(TrignoActivity.this,HomeActivity.class);
+        startActivity(i);
     }
 
     private void check() {
@@ -149,6 +182,9 @@ public class TrignoActivity extends AppCompatActivity {
         if(Goals.get(i).toString().equals(Float.toString(r)))
         {
             i+=1;
+            SharedPreferences p = getApplicationContext().getSharedPreferences("level",MODE_PRIVATE);
+            p.edit().putInt("trignolevel",i).apply();
+
             size=65;
             Result.setTextSize(size);
             Result.setText("YOU WIN");
@@ -162,8 +198,8 @@ public class TrignoActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     if(i==10){
 
-                    Intent intent =new Intent( TrignoActivity.this,HomeActivity.class );
-                    startActivity( intent );
+                        Intent intent =new Intent( TrignoActivity.this,HomeActivity.class );
+                        startActivity( intent );
                     }
                     else {
 
